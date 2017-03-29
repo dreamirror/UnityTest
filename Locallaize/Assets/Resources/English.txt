@@ -1,0 +1,26 @@
+Flag = Flag-US
+Language = English
+English = English
+Chinese = 中文
+ChineseF = 繁体
+
+Loading = Loading
+Version = Version
+EnterGame = EnterGame
+Click4Select = Click4Select
+LastServer = LastServer
+Okay = Okay
+Cancel = Cancel
+BtnHelp = BtnHelp
+BtnShare = BtnShare
+BtnSetting = BtnSetting
+BtnPackage = BtnPackage
+BtnStartGame = BtnStartGame
+BtnAttack = BtnAttack
+BtnExit = BtnExit
+
+stuff1 = stuff1
+stuff2 = stuff2
+stuff3 = stuff3
+
+MsgExitGame= MsgExitGame

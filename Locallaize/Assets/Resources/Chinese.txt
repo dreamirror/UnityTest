@@ -1,0 +1,26 @@
+Flag = Flag-CNF
+Language = Chinese
+English = English
+Chinese = 中文
+ChineseF = 繁体
+
+Loading = 死命加载中...
+Version = 版本：
+EnterGame = 点击屏幕开始游戏
+Click4Select = 点击切换
+LastServer = 上次登陆
+Okay = 确定
+Cancel = 取消
+BtnHelp = 帮助
+BtnShare = 分享
+BtnSetting = 设置
+BtnPackage = 背包
+BtnStartGame = 开始
+BtnAttack = 攻击
+BtnExit = 离开
+
+stuff1 = 锤子
+stuff2 = 一壶水
+stuff3 = 鼎
+
+MsgExitGame= 确定要退出游戏？

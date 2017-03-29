@@ -23,12 +23,14 @@ public class GetVersion : MonoBehaviour {
     public void SetMD5() {
         // 获取Res文件夹下所有文件的相对路径和MD5值  
         string[] files = Directory.GetFiles(resPath, "*", SearchOption.AllDirectories);
+        Debug.Log("resPath==" + resPath);
+        Debug.Log(files.Length);
         StringBuilder versions = new StringBuilder();
         for (int i = 0, len = files.Length; i < len; i++)
         {
             string filePath = files[i];
             string extension = filePath.Substring(files[i].LastIndexOf("."));
-            if (extension == ".unity3d")
+            if (extension == ".assetbundle")
             {
                 string relativePath = filePath.Replace(resPath, "").Replace("\\", "/");
                 string md5 = MD5File(filePath);

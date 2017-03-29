@@ -18,8 +18,8 @@ public class ResUpdate : MonoBehaviour {
     private bool NeedUpdateLocalVersionFile = false;
     void Awake() {
         VERSION_FILE = "vertion.txt";
-        LOCAL_RES_URL = "file://" + Application.dataPath + "/Res/";
-        SERVER_RES_URL = "file;///E:/Res/";
+        LOCAL_RES_URL = "file:///" + Application.dataPath + "/Res/";
+        SERVER_RES_URL = "file:///E:/Res/";
         LOCAL_RES_PATH = Application.dataPath + "/Res/";
         Debug.Log("Application.dataPath ==" + Application.dataPath);
     }
@@ -30,7 +30,6 @@ public class ResUpdate : MonoBehaviour {
         NeedDownFile = new List<string>();
         StartCoroutine(DownLoad(LOCAL_RES_URL + VERSION_FILE, delegate(WWW serverVersion)
         {
-            Debug.Log("serverVersion.text==" + serverVersion.text);
             ParseVersionFile(serverVersion.text, ServerResVersion);
             CompareVersion();
             DownLoadRes();
@@ -87,6 +86,7 @@ public class ResUpdate : MonoBehaviour {
     private void ParseVersionFile(string content, Dictionary<string,string> dict) {
         Debug.Log("Begin ParseVersionFile");
         if (content == null || content.Length == 0) {
+            Debug.LogError("content is null");
             return;
         }
         string[] items = content.Split(new char[] { '\n' });
@@ -134,12 +134,13 @@ public class ResUpdate : MonoBehaviour {
     private IEnumerator DownLoad(string url, HandleFinishDownload finishFun)
     {
         Debug.Log("Begin Downlaod");
+
         WWW www = new WWW(url);
         Debug.Log(url);
         yield return www;
         if (finishFun != null)
         {
-            Debug.Log("www=="+www.text.ToString());
+            Debug.Log("www=="+www.bytes.Length);
             finishFun(www);
         }
         www.Dispose();

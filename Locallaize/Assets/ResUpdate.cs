@@ -48,7 +48,7 @@ public class ResUpdate : MonoBehaviour {
     }
 
     private void DownLoadRes() {
-        Debug.Log("Begin DowloadRes");
+       // Debug.Log("Begin DowloadRes");
         if (NeedDownFile.Count == 0) {
 
             UpdateLocalVersionFile();
@@ -62,21 +62,21 @@ public class ResUpdate : MonoBehaviour {
             ReplaceLocalRes(file, w.bytes);
             DownLoadRes(); 
         }));
-        Debug.Log("End DowloadRes");
+        //Debug.Log("End DowloadRes");
     }
 
     private void ReplaceLocalRes(string fileName, byte[] data)
     {
-        Debug.Log("Begin ReaplaceLocalRes");
+        //Debug.Log("Begin ReaplaceLocalRes");
         string filePath = LOCAL_RES_PATH + fileName;
         FileStream stream = new FileStream(LOCAL_RES_PATH + fileName, FileMode.Create);
         stream.Write(data, 0, data.Length);
         stream.Flush();
         stream.Close();
-        Debug.Log("End ReplaceLocalRes");
+       // Debug.Log("End ReplaceLocalRes");
     }   
     private void UpdateLocalVersionFile() {
-        Debug.Log("Begin UpdateLocalVersionFile");
+       // Debug.Log("Begin UpdateLocalVersionFile");
         if (NeedUpdateLocalVersionFile) {
             StringBuilder version = new StringBuilder();
             foreach(var item in ServerResVersion){
@@ -89,18 +89,18 @@ public class ResUpdate : MonoBehaviour {
             stream.Write(data,0,data.Length);
             stream.Flush();
             stream.Close();
-            Debug.Log("End UpdateLocalVersionFile");
+           // Debug.Log("End UpdateLocalVersionFile");
         }
         //StartCoroutine(Show());
     
     }
     private void ParseVersionFile(string content, Dictionary<string,string> dict) {
-        Debug.Log("Begin ParseVersionFile");
+       // Debug.Log("Begin ParseVersionFile");
         if (content == null || content.Length == 0) {
             Debug.LogError("content is null");
             return;
         }
-        Debug.Log("content is =="+content);
+       // Debug.Log("content is =="+content);
         string[] items = content.Split(new char[] { '\n' });
         foreach (string item in items) {
             string[] info = item.Split(new char[] { ',' });
@@ -110,21 +110,21 @@ public class ResUpdate : MonoBehaviour {
                 dict.Add(info[0],info[1]);
             }
         }
-        Debug.Log("End ParseVersionFile");
+       // Debug.Log("End ParseVersionFile");
     }
 
     private IEnumerator Show() {
-        Debug.Log("Begin Show");
+       // Debug.Log("Begin Show");
         WWW asset = new WWW(LOCAL_RES_URL + "cube.assetbundle");
         yield return asset;
         AssetBundle bundle = asset.assetBundle;
         Instantiate(bundle.LoadAsset("Prefab"));
         bundle.Unload(false);
-        Debug.Log("End Show");
+       // Debug.Log("End Show");
     }
 
     private void CompareVersion() {
-        Debug.Log("Begin CompareVersion");
+       // Debug.Log("Begin CompareVersion");
         foreach(var version in ServerResVersion){
             string fileName = version.Key;
             string serverMd5 = version.Value;
@@ -141,13 +141,13 @@ public class ResUpdate : MonoBehaviour {
             }
         }
         NeedUpdateLocalVersionFile = NeedDownFile.Count > 0;
-        Debug.Log("End CompareVersion");
+       // Debug.Log("End CompareVersion");
     }
    
 
     private IEnumerator DownLoad(string url, HandleFinishDownload finishFun)
     {
-        Debug.Log("Begin Downlaod");
+       // Debug.Log("Begin Downlaod");
 
         WWW www = new WWW(url);
         Debug.Log("------------------------"+www.progress);
@@ -158,7 +158,7 @@ public class ResUpdate : MonoBehaviour {
             finishFun(www);
         }
         www.Dispose();
-        Debug.Log("End Download");
+       // Debug.Log("End Download");
     }
 
     public delegate void HandleFinishDownload(WWW www);  

@@ -39,6 +39,7 @@ public class CompressAndDecompress : Editor {
     }
 
     static void DecompressFile(string extension) {
+        Debug.Log("begin DecompressFile");
         string path = EditorUtility.OpenFilePanel("Decompress file","","zip");
         if (path.Length != 0) {
             int lastDotIndex = path.LastIndexOf(".");
@@ -47,13 +48,14 @@ public class CompressAndDecompress : Editor {
             AssetDatabase.Refresh();
             EditorUtility.DisplayDialog("解压文件","文件已解压完成","确认");
         }
+        Debug.Log("end DecompressFile");
     }
 
     //压缩文件夹中的文件
     [MenuItem("Compress/Compress File In Directory")]
     static void CompressFiilesInDirectory() {
-
-        string path = EditorUtility.OpenFilePanel("Compress File In Directory", "", "");
+        Debug.Log("begin CompressFilesInDirectory");
+        string path = EditorUtility.OpenFolderPanel("Compress File In Directory", "", "");
         if (path.Length != 0) {
             DirectoryInfo source = new DirectoryInfo(path);
             DirectoryInfo target = new DirectoryInfo(path+"_compress");
@@ -61,21 +63,23 @@ public class CompressAndDecompress : Editor {
                 target.Delete(true);
             }
 
-            target.Create();
+            target.Create(); //创建一个文件夹
             target.Refresh();
-
+            Debug.Log("path==" + path);
             CopyAll(source,target);
             ListFiles((FileSystemInfo)target,true);
-            EditorUtility.DisplayDialog("压缩文件夹", "文件夹中所有的文件都已解压完成", "确定");
+            EditorUtility.DisplayDialog("压缩文件夹", "文件夹中所有的文件都已压缩完成", "确定");
 
         }
+        Debug.Log("end CompressFilesInDirectory");
     }
 
 
     //解压文件夹中的文件
     [MenuItem("Compress/Decompress File In Directory")]
     static void DecompressFileInDirectory() {
-        string path = EditorUtility.OpenFilePanel("Decompress File In Directory","","");
+        Debug.Log("begin DecimpressFileInDirectory");
+        string path = EditorUtility.OpenFolderPanel("Decompress File In Directory", "", "");
         if (path.Length != 0) {
             DirectoryInfo source = new DirectoryInfo(path);
             DirectoryInfo target = new DirectoryInfo(path + "_decompress");
@@ -84,14 +88,16 @@ public class CompressAndDecompress : Editor {
             }
             target.Create();
             target.Refresh();
-
+           
             CopyAll(source,target);
             ListFiles(target,false);
             EditorUtility.DisplayDialog("解压文件夹","文件夹中所有的文件已经解压完成","确定");
 
         }
+        Debug.Log("end DecimpressFileInDirectory");
     }
     static void CopyAll(DirectoryInfo source,DirectoryInfo target,ArrayList extensions = null) {
+        Debug.Log("begin CpoyAll");
         if (source.FullName.ToLower() == target.FullName.ToLower()) {
             return;
         }
@@ -100,30 +106,36 @@ public class CompressAndDecompress : Editor {
             Directory.CreateDirectory(target.FullName);
             target.Refresh();
         }
-
+        Debug.Log("source.GetFiles()==="+source.GetFiles().Length);
         foreach(FileInfo fi in source.GetFiles()){
+            Debug.Log("!!!!!!!!!!!!!!!!!!");
             if (extensions == null || extensions.Count == 0)
             {
                 if (fi.Extension != ".meta")
                 {
-                    fi.CopyTo(Path.Combine(target.ToString(), fi.Name), true);
+                    Debug.Log("1111111111111");
+                   fi.CopyTo(Path.Combine(target.ToString(), fi.Name), true);
                 }
             }
             else {
                 if (extensions.Contains(fi.Extension)) {
+                    Debug.Log("22222222222222");
                     fi.CopyTo(Path.Combine(target.ToString(),fi.Name),true);
                 }
             }
         }
-
-        foreach(DirectoryInfo sourceSubDir in source.GetDirectories()){
+        Debug.Log("source.GetDirectories()==" + source.GetDirectories().Length);
+        foreach(DirectoryInfo sourceSubDir in source.GetDirectories()){ //遍历子目录
+            Debug.Log("####################");
             DirectoryInfo targetSubDir = target.CreateSubdirectory(sourceSubDir.Name);
             CopyAll(sourceSubDir,targetSubDir,extensions);
         }
+        Debug.Log("end CopyAll");
     }
 
     //遍历文件夹中的所有文件，压缩或解压缩
     static void ListFiles(FileSystemInfo info,bool isCompress) {
+        Debug.Log("begin ListFiles");
         if (!info.Exists) {
             return;
         }
@@ -134,6 +146,7 @@ public class CompressAndDecompress : Editor {
             return;
         }
         FileSystemInfo[] files = dir.GetFileSystemInfos();
+        Debug.Log("aaaaaaaaaaaaa=="+files.Length);
         for (int i = 0; i < files.Length; i++)
         {
             FileInfo file = files[i] as FileInfo;
@@ -169,12 +182,13 @@ public class CompressAndDecompress : Editor {
             {
                 ListFiles(files[i], isCompress);
             }
-        } 
-  
+        }
+        Debug.Log("end ListFiles");
     }
 
     //使用LZMA算法压缩文件
     private static void CompressFileLZMA(string inFile, string outFile) {
+        Debug.Log("begin CompressFileLZMA");
         Encoder coder = new Encoder();
         FileStream input = new FileStream(inFile,FileMode.Open);
         FileStream output = new FileStream(outFile,FileMode.Create);
@@ -187,9 +201,11 @@ public class CompressAndDecompress : Editor {
         output.Flush();
         output.Close();
         input.Close();
+        Debug.Log("end CompressFileLZMA");
     }
     //使用LZMA算法解压文件
     private static void DecompressFileLZMA(string inFile, string outFile) {
+        Debug.Log("begin DecompresFileLZMA");
         Decoder coder = new Decoder();
         FileStream input = new FileStream(inFile,FileMode.Open);
         FileStream output = new FileStream(outFile,FileMode.Create);
@@ -206,6 +222,7 @@ public class CompressAndDecompress : Editor {
         output.Flush();
         output.Close();
         input.Close();
+        Debug.Log("end DecompressFileLZMA");
     }
 
 }

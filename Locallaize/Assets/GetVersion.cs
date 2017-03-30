@@ -4,23 +4,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System;
+using UnityEditor;
 
 
-public class GetVersion : MonoBehaviour {
+public static class GetVersion  {
 
 	// Use this for initialization
-    private string resPath;
-	void Start () {
-        resPath = Application.dataPath + "/Res/";
-        SetMD5();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
-    public void SetMD5() {
+   
+
+    [MenuItem("Assets/SetMD5")]
+    public static void SetMD5() {
+         string resPath = Application.dataPath + "/Res/";
         // 获取Res文件夹下所有文件的相对路径和MD5值  
         string[] files = Directory.GetFiles(resPath, "*", SearchOption.AllDirectories);
         Debug.Log("resPath==" + resPath);

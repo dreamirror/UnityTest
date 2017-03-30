@@ -17,7 +17,7 @@ public class ResUpdate : MonoBehaviour {
     private List<string> NeedDownFile;
     private bool NeedUpdateLocalVersionFile = false;
     void Awake() {
-        VERSION_FILE = "vertion.txt";
+        VERSION_FILE = "version.txt";
         LOCAL_RES_URL = "file:///" + Application.dataPath + "/Res/";
         SERVER_RES_URL = "file:///E:/Res/";
         LOCAL_RES_PATH = Application.dataPath + "/Res/";
@@ -28,12 +28,23 @@ public class ResUpdate : MonoBehaviour {
         LocalResVersion = new Dictionary<string,string>();
         ServerResVersion = new Dictionary<string,string>();
         NeedDownFile = new List<string>();
-        StartCoroutine(DownLoad(LOCAL_RES_URL + VERSION_FILE, delegate(WWW serverVersion)
+        StartCoroutine(GetLocalVersion());
+
+    }
+
+    private IEnumerator GetLocalVersion() {
+        WWW www = new WWW(LOCAL_RES_URL + VERSION_FILE);
+        yield return www;
+        ParseVersionFile(www.text,LocalResVersion);
+        yield return null;
+        StartCoroutine(DownLoad(SERVER_RES_URL + VERSION_FILE, delegate(WWW serverVersion)
         {
             ParseVersionFile(serverVersion.text, ServerResVersion);
             CompareVersion();
             DownLoadRes();
         }));
+
+    
     }
 
     private void DownLoadRes() {
@@ -80,7 +91,7 @@ public class ResUpdate : MonoBehaviour {
             stream.Close();
             Debug.Log("End UpdateLocalVersionFile");
         }
-       // StartCoroutine(Show());
+        //StartCoroutine(Show());
     
     }
     private void ParseVersionFile(string content, Dictionary<string,string> dict) {
@@ -89,10 +100,13 @@ public class ResUpdate : MonoBehaviour {
             Debug.LogError("content is null");
             return;
         }
+        Debug.Log("content is =="+content);
         string[] items = content.Split(new char[] { '\n' });
         foreach (string item in items) {
             string[] info = item.Split(new char[] { ',' });
             if (info != null && info.Length == 2) {
+                Debug.Log("info0=="+info[0]);
+                Debug.Log("info1==" + info[1]);
                 dict.Add(info[0],info[1]);
             }
         }
@@ -136,11 +150,11 @@ public class ResUpdate : MonoBehaviour {
         Debug.Log("Begin Downlaod");
 
         WWW www = new WWW(url);
-        Debug.Log(url);
+        Debug.Log("------------------------"+www.progress);
         yield return www;
+        Debug.Log("------------------------" + www.progress);
         if (finishFun != null)
         {
-            Debug.Log("www=="+www.bytes.Length);
             finishFun(www);
         }
         www.Dispose();
